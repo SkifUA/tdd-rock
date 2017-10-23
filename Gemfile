@@ -32,6 +32,15 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+  gem 'spring-commands-rspec'
+  gem 'spring-commands-cucumber'
+end
+
+group :test do
+  gem 'rails-controller-testing'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+
 end
 
 group :development do
