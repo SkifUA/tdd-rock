@@ -25,7 +25,41 @@
        get :edit, params: { id: achievement.id }
        expect(assigns(:achievement)).to eq(achievement)
      end
+   end
 
+   describe "PUT update" do
+     let(:achievement) { FactoryGirl.create(:public_achievement) }
+
+     context "valid date" do
+       let(:valid_data) { FactoryGirl.attributes_for(:public_achievement, title: 'New title') }
+
+       it "redirect to achievement#show" do
+         put :update, params: { id: achievement, achievement: valid_data }
+         expect(response).to redirect_to(achievement_path(assigns[:achievement]))
+       end
+
+       it "updates achievement in the database" do
+         put :update, params: { id: achievement, achievement: valid_data }
+         achievement.reload
+         expect(achievement.title).to eq("New title")
+       end
+
+     end
+
+     context "invalid date" do
+       let(:invalid_data) { FactoryGirl.attributes_for(:public_achievement, title: '', description: "Invalid data") }
+
+       it "renders to :edit template" do
+         put :update, params: { id: achievement, achievement: invalid_data }
+         expect(response).to render_template(:edit)
+       end
+
+       it "doesn't update achievement in the database" do
+         put :update, params: { id: achievement, achievement: invalid_data }
+         achievement.reload
+         expect(achievement.description).not_to eq("Invalid data")
+       end
+     end
    end
 
 
@@ -84,6 +118,20 @@
            post :create, params: { achievement: invalid_data }
          }.not_to change(Achievement, :count)
        end
+     end
+   end
+
+   describe "DELETE destroy" do
+     let(:achievement) { FactoryGirl.create(:public_achievement) }
+
+     it "redirect to achievements#index" do
+       delete :destroy, params: { id: achievement }
+       expect(response).to redirect_to(achievements_path)
+     end
+
+     it "deletes achievement from databases" do
+       delete :destroy, params: { id: achievement }
+       expect(Achievement.exists?(achievement.id)).to be_falsy
      end
    end
  end
