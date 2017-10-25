@@ -4,6 +4,7 @@ FactoryGirl.define do
     description "description"
     featured false
     cover_image "some_file.png"
+    association :user, factory: :user
 
     factory :privacy_achievement do
       privacy :privacy_access
