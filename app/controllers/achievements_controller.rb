@@ -16,6 +16,7 @@ class AchievementsController < ApplicationController
     @achievement.user_id = current_user.id
 
     if @achievement.save
+      UserMailer.achievement_created(current_user.email, @achievement.id).deliver_now
       redirect_to achievement_path(@achievement), notice: 'Achievement has been created'
     else
       render :new, notice: 'Achievement has not been created'

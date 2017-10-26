@@ -9,6 +9,7 @@ feature 'create new achievement' do
 
   background do # before
     login_form.visit_page.login_as(user)
+    ActionMailer::Base.deliveries.clear
   end
 
   scenario 'create new achievement with validate data' do
@@ -18,6 +19,8 @@ feature 'create new achievement' do
                         )
                         .submit
 
+    expect(ActionMailer::Base.deliveries.count).to eq(1)
+    expect(ActionMailer::Base.deliveries.last.to).to include(user.email)
     expect(page).to have_content('Achievement has been created')
     expect(Achievement.last.title).to eq('Read a book')
   end
